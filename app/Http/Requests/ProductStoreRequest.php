@@ -29,4 +29,11 @@ class ProductStoreRequest extends FormRequest
             'images' => 'max:5'
         ];
     }
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'price' => str_replace(' ', '', $this->price)
+        ]);
+    }
+
 }

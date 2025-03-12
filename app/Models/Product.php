@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ProductImage;
 
 class Product extends Model
 {
@@ -12,11 +13,10 @@ class Product extends Model
     protected $fillable = [
         'name',
         'detail',
-        'price',
-        'image'
+        'price'
     ];
 
-    public function images()
+    public function images(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ProductImage::class);
     }

@@ -10,20 +10,23 @@ use Illuminate\View\View;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    private const PER_PAGE = 5;
+    private const IMAGE_DISK = 'public';
+    private const IMAGE_PATH = 'images';
+
     public function index(): View
     {
-        $products = Product::latest()->paginate(5);
-
+        $products = Product::latest()->paginate(self::PER_PAGE);
         return view('products.index', compact('products'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * self::PER_PAGE);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -37,20 +40,23 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request): RedirectResponse
     {
-        $product = Product::create($request->validated());
+        try {
+            DB::transaction(function () use ($request) {
+                $product = Product::create($request->validated());
 
-        if ($request->hasFile('images')) {
-            foreach($request->file('images') as $image) {
-                $path = $image->store('images', 'public');
-                $product->images()->create([
-                    'image' => $path
-                ]);
-            }
+                if ($request->hasFile('images')) {
+                    $this->handleImages($product, $request->file('images'));
+                }
+            });
+
+            return redirect()->route('products.index')
+                ->with('success', 'Product created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error creating product.');
         }
-
-        return redirect()->route('products.index')
-            ->with('success', 'Product created successfully.');
     }
+
 
     /**
      * Display the specified resource.
@@ -73,40 +79,49 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
     {
-        $product->update($request->validated());
+        DB::transaction(function () use ($request, $product) {
+            $product->update($request->validated());
 
-        if ($request->hasFile('images')) {
-            // Usuń stare zdjęcia
-            foreach($product->images as $image) {
-                Storage::disk('public')->delete($image->image);
-                $image->delete();
-            }
+            if ($request->hasFile('images')) {
+                foreach($product->images as $image) {
+                    Storage::disk('public')->delete($image->image);
+                    $image->delete();
+                }
 
-            // Dodaj nowe zdjęcia
-            foreach($request->file('images') as $image) {
-                $path = $image->store('images', 'public');
-                $product->images()->create([
-                    'image' => $path
-                ]);
+                $this->handleImages($product, $request->file('images'));
             }
-        }
+        });
 
         return redirect()->route('products.index')
             ->with('success', 'Product updated successfully');
     }
-
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Product $product): RedirectResponse
     {
-        foreach($product->images as $image) {
-            Storage::disk('public')->delete($image->image);
-        }
-        $product->delete();
+        DB::transaction(function () use ($product) {
+            $this->deleteProductImages($product);
+            $product->delete();
+        });
 
         return redirect()->route('products.index')
             ->with('success', 'Product deleted successfully');
     }
+    private function handleImages(Product $product, array $images): void
+    {
+        foreach($images as $image) {
+            $path = $image->store('images', 'public');
+            $product->images()->create(['image' => $path]);
+        }
+    }
+    private function deleteProductImages(Product $product): void
+    {
+        foreach($product->images as $image) {
+            Storage::disk(self::IMAGE_DISK)->delete($image->image);
+            $image->delete();
+        }
+    }
+
 }

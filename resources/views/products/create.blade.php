@@ -39,7 +39,8 @@
                 <div class="mb-3">
                     <label for="inputName" class="form-label"><strong>Price:</strong></label>
                     <input
-                        type="text"
+                        type="number"
+                        step="0.01"
                         name="price"
                         class="form-control @error('price') is-invalid @enderror"
                         id="inputPrice"
