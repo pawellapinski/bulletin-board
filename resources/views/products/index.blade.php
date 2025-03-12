@@ -18,6 +18,7 @@
                 <thead>
                 <tr>
                     <th width="80px">No</th>
+                    <th>Image</th>
                     <th>Name</th>
                     <th>Details</th>
                     <th>Price</th>
@@ -29,6 +30,15 @@
                 @forelse ($products as $product)
                     <tr>
                         <td>{{ ++$i }}</td>
+                        <td>
+                            @if($product->images->first())
+                                <img src="{{ Storage::url($product->images->first()->image) }}"
+                                     class="img-thumbnail"
+                                     style="max-height: 50px;">
+                            @else
+                                <span>No image</span>
+                            @endif
+                        </td>
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->detail }}</td>
                         <td>{{ $product->price }}</td>
