@@ -32,16 +32,19 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                     <div class="form-group">
-                        <strong>Zdjęcia:</strong> <br/>
+                        <strong>Images:</strong>
                         <div class="row">
                             @foreach($product->images as $image)
                                 <div class="col-md-4 mt-2">
-                                    <img src="{{ Storage::url($image->image) }}" class="img-fluid">
+                                    <a href="{{ Storage::url($image->image) }}" data-lightbox="product-gallery" data-title="{{ $product->name }}">
+                                        <img src="{{ Storage::url($image->image) }}" class="img-fluid rounded">
+                                    </a>
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
+
 
             </div>
 
