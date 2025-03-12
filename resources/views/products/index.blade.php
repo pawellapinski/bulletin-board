@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="card mt-5">
-        <h2 class="card-header">Tablica ogłoszeń</h2>
+        <h2 class="card-header">Bulletin board</h2>
         <div class="card-body">
 
             @session('success')
