@@ -53,6 +53,8 @@ Galeria zdjęć dla każdego ogłoszenia
 Walidacja danych
 Responsywny interfejs
 
+![crud1](https://github.com/user-attachments/assets/c45378e2-5f5d-4326-b290-f2d4fec1c83e)
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
