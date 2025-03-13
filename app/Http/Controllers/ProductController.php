@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of fzthe resource.
      */
     private const PER_PAGE = 5;
     private const IMAGE_DISK = 'public';
@@ -112,7 +112,7 @@ class ProductController extends Controller
     private function handleImages(Product $product, array $images): void
     {
         foreach($images as $image) {
-            $path = $image->store('images', 'public');
+            $path = $image->store(self::IMAGE_PATH, self::IMAGE_DISK);
             $product->images()->create(['image' => $path]);
         }
     }
