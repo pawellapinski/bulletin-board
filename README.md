@@ -6,6 +6,52 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+# Bulletin Board - System ogłoszeń
+
+## O projekcie
+System ogłoszeń zbudowany w Laravel z możliwością dodawania, edycji i usuwania ogłoszeń wraz z galeriami zdjęć.
+
+## Wymagania
+- Docker Desktop
+- WSL2 z Ubuntu
+- Composer
+- Git
+
+## Instalacja i uruchomienie
+1. Klonowanie repozytorium:
+```bash
+git clone https://github.com/pawellapinski/bulletin-board/
+```
+2. Instalacja zależności:
+```bash
+composer install
+```
+3. Uruchomienie kontenerów:
+```bash
+./vendor/bin/sail up -d
+```
+
+4. Migracja bazy danych:
+```bash
+./vendor/bin/sail artisan migrate
+```
+5. Utworzenie linku do storage:
+```bash
+./vendor/bin/sail artisan storage:link
+```
+Testy
+Uruchomienie testów:
+```bash
+./vendor/bin/sail test
+```
+
+Funkcjonalności
+Dodawanie ogłoszeń
+Edycja ogłoszeń
+Usuwanie ogłoszeń
+Galeria zdjęć dla każdego ogłoszenia
+Walidacja danych
+Responsywny interfejs
 
 ## About Laravel
 
